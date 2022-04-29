@@ -1,3 +1,16 @@
+
+:root {
+  --moon-diameter: 50px;
+  --clr-moon: #e2e1e1;
+  --shadow-size: -0px;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
 body, html {
   background-color: #000;
   color: #fff;
@@ -7,4 +20,51 @@ body, html {
   padding: 0;
   overflow: hidden;
 }
-canvas{position:absolute;top:0;left:0}
+
+canvas {
+  position: fixed;
+  top:0;
+  left:0;
+  cursor: pointer;
+  /* z-index: -1; */
+}
+
+.moon {
+  /* Set position */
+
+  top: 40px;
+  left: 100px;
+  position: absolute;
+
+  /* margin-top: 40px;
+  margin-left: 100px;
+  position: relative; */
+
+  width: var(--moon-diameter);
+  height: var(--moon-diameter);
+  border-radius: 50%;
+
+  background: var(--clr-moon);
+  box-shadow: 0px 0px 25px 5px var(--clr-moon);
+}
+
+.moon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--moon-diameter);
+  height: var(--moon-diameter);
+  border-radius: 50%;
+  box-shadow: 0px 0px 45px 15px var(--clr-moon);
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+.moon:hover::after {
+  opacity: 1;
+}
+
+button {
+  border: none;
+}
