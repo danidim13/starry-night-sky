@@ -6,6 +6,13 @@
 	window.requestAnimationFrame = requestAnimationFrame;
 })();
 
+function calcHeartPoint(angle) {
+	const r = 5;
+	const x = r * 14 * Math.pow(Math.sin(angle),3);
+	const y = -r * (13 * Math.cos(angle) - 5 * Math.cos(2*angle) - 2 * Math.cos(3*angle) - Math.cos(4*angle));
+	return { x , y };
+}
+
 // Terrain stuff.
 var terrain = document.getElementById("terCanvas"),
 	background = document.getElementById("bgCanvas"),
@@ -75,9 +82,42 @@ Star.prototype.update = function(){
 	this.x-=this.speed;
 	if(this.x<0){
 		this.reset();
-	}else{
-		bgCtx.fillRect(this.x,this.y,this.size,this.size); 
 	}
+}
+
+Star.prototype.draw = function() {
+	bgCtx.fillRect(this.x,this.y,this.size,this.size); 
+}
+
+function StarHeart(x, y) {
+	this.status = 'active';
+	this.lingerCount = 1000;
+	this.starCount = 100;
+	this.x = x;
+	this.y = y;
+	this.step = Math.PI*2/this.stars;
+	this.stars = [];
+	this.updateCount = 0;
+}
+
+StarHeart.prototype.update = function() {
+	if (this.updateCount < this.starCount) {
+		const angle = this.updateCount/this.starCount * Math.PI * 2;
+		const { x: xoff, y: yoff } = calcHeartPoint(angle);
+		this.stars.push(new Star({
+			x: this.x + xoff,
+			y: this.y + yoff,
+		}));
+	} else if (this.updateCount > this.starCount) {
+		// this.stars = [];
+		// this.status = 'off';
+	}
+	this.stars.forEach(s => s.update());
+	this.updateCount++;
+}
+
+StarHeart.prototype.draw = function() {
+	this.stars.forEach(s => s.draw());
 }
 
 function ShootingStar(){
@@ -101,17 +141,21 @@ ShootingStar.prototype.update = function(){
 		this.y+=this.speed;
 		if(this.x < 0 - this.len || this.y >= height + this.len){
 			this.reset();
-		}else{
-		bgCtx.lineWidth = this.size;
-			bgCtx.beginPath();
-			bgCtx.moveTo(this.x,this.y);
-			bgCtx.lineTo(this.x+this.len, this.y-this.len);
-			bgCtx.stroke();
 		}
 	}else{
 		if(this.waitTime < new Date().getTime()){
 			this.active = true;
 		}			
+	}
+}
+
+ShootingStar.prototype.draw = function() {
+	if (this.active && !(this.x < 0 - this.len || this.y >= height + this.len)) {
+		bgCtx.lineWidth = this.size;
+		bgCtx.beginPath();
+		bgCtx.moveTo(this.x,this.y);
+		bgCtx.lineTo(this.x+this.len, this.y-this.len);
+		bgCtx.stroke();
 	}
 }
 
@@ -137,6 +181,7 @@ function animate(){
 	
 	while(entLen--){
 		entities[entLen].update();
+		entities[entLen].draw();
 	}
 	
 	requestAnimationFrame(animate);
@@ -146,4 +191,5 @@ animate();
 // const canvas = document.querySelector('canvas');
 terrain.addEventListener('click', e => {
 	console.log('canvas clicked!', { x: e.x, y: e.y });
+	entities.push(new StarHeart(e.x, e.y));
 })
