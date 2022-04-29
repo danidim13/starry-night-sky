@@ -95,25 +95,27 @@ function StarHeart(x, y) {
 	this.starCount = 100;
 	this.x = x;
 	this.y = y;
-	this.step = Math.PI*2/this.stars;
+	// this.step = Math.PI*2/this.stars;
 	this.stars = [];
 	this.updateCount = 0;
 }
 
 StarHeart.prototype.update = function() {
-	if (this.updateCount < this.starCount) {
-		const angle = this.updateCount/this.starCount * Math.PI * 2;
-		const { x: xoff, y: yoff } = calcHeartPoint(angle);
-		this.stars.push(new Star({
-			x: this.x + xoff,
-			y: this.y + yoff,
-		}));
-	} else if (this.updateCount > this.starCount) {
-		// this.stars = [];
-		// this.status = 'off';
+	for (let steps = 2; steps > 0; steps--) {
+		if (this.updateCount < this.starCount) {
+			const angle = this.updateCount/this.starCount * Math.PI * 2;
+			const { x: xoff, y: yoff } = calcHeartPoint(angle);
+			this.stars.push(new Star({
+				x: this.x + xoff,
+				y: this.y + yoff,
+			}));
+		} else if (this.updateCount > this.starCount) {
+			// this.stars = [];
+			// this.status = 'off';
+		}
+		this.updateCount++;
 	}
 	this.stars.forEach(s => s.update());
-	this.updateCount++;
 }
 
 StarHeart.prototype.draw = function() {
@@ -190,6 +192,6 @@ animate();
 
 // const canvas = document.querySelector('canvas');
 terrain.addEventListener('click', e => {
-	console.log('canvas clicked!', { x: e.x, y: e.y });
+	// console.log('canvas clicked!', { x: e.x, y: e.y });
 	entities.push(new StarHeart(e.x, e.y));
 })
