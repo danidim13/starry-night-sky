@@ -194,4 +194,52 @@ animate();
 terrain.addEventListener('click', e => {
 	// console.log('canvas clicked!', { x: e.x, y: e.y });
 	entities.push(new StarHeart(e.x, e.y));
+	e.preventDefault();
 })
+
+const DUR_MILLIS = 15_000;
+// Moon stuff 
+function createFloatingText(text) {
+	const randx = Math.random()*width*2/5 + width/4;
+	const randy = Math.random()*height/2 + height/3;
+	const myDiv = document.createElement('div', {
+	});
+	myDiv.innerText = text;
+	myDiv.className = 'text-float-disappear';
+	myDiv.style.position = 'absolute';
+	myDiv.style.left = `${randx}px`;
+	myDiv.style.top = `${randy}px`;
+	document.querySelector('main').appendChild(myDiv);
+	setTimeout(() => {
+		document.querySelector('main').removeChild(myDiv);
+	}, DUR_MILLIS)
+}
+
+const phrases = [
+	'Linda amor :)',
+	'Te amo <3',
+	'Mi corazón de melón :3',
+	'Eres mi mejor amiga',
+	'Mi dulce nieve de limón',
+	'Te amo muchísimo!',
+	'Siempre me haces sonreír :D',
+];
+
+let moonPhraseIt = 0;
+
+const moon = document.querySelector('.moon');
+
+moon.addEventListener('click', e => {
+	createFloatingText(phrases[moonPhraseIt]);
+	moonPhraseIt = moonPhraseIt === phrases.length-1 ? 0 : moonPhraseIt + 1;
+});
+const intro = [
+	'No puedo bajarte la luna...',
+	'Pero sí llenarte este cielo de estrellas',
+	'PS: son pistas amor :P',
+];
+
+// Set initial messages for amor amor <3
+setTimeout(() => createFloatingText(intro[0]), 500+DUR_MILLIS*0)
+setTimeout(() => createFloatingText(intro[1]), 500+DUR_MILLIS*1)
+setTimeout(() => createFloatingText(intro[2]), 500+DUR_MILLIS*2)

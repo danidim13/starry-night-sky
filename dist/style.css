@@ -3,6 +3,7 @@
   --moon-diameter: 50px;
   --clr-moon: #e2e1e1;
   --shadow-size: -0px;
+  --text-animation-duration: 15s;
 }
 
 *,
@@ -19,15 +20,22 @@ body, html {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  font-family: 'Press Start 2P', cursive;
 }
 
 canvas {
   position: fixed;
   top:0;
   left:0;
-  cursor: pointer;
+  right: 0;
+  bottom: 0;
+  /* cursor: pointer; */
   /* z-index: -1; */
 }
+
+/* main {
+  z-index: 1;
+} */
 
 .moon {
   /* Set position */
@@ -63,6 +71,42 @@ canvas {
 
 .moon:hover::after {
   opacity: 1;
+}
+
+.text-center {
+  top: 50%;
+  right: 25%;
+  position: absolute;
+}
+
+.text-float-disappear {
+  animation: float-right var(--text-animation-duration) ease-in;
+  opacity: 0;
+}
+
+.animation-second {
+  animation-delay: calc(var(--text-animation-duration) + 1s);
+}
+
+
+@keyframes float-right {
+  from {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(100px);
+    opacity: 0;
+  }
 }
 
 button {
